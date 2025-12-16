@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Кастомные стили */
+:root {
+  --color-bg: #0a0e14;
+  --color-surface: #12171e;
+  --color-border: #1f2937;
+  --color-text: #e6e6e6;
+  --color-muted: #6b7280;
+  --color-accent: #00d9ff;
+  --color-accent-dim: rgba(0, 217, 255, 0.1);
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted);
+}
+
+/* Анимации появления */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px var(--color-accent), 0 0 10px rgba(0, 217, 255, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 10px var(--color-accent), 0 0 20px rgba(0, 217, 255, 0.5); 
+  }
+}
+
+/* Утилиты */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out forwards;
+}
+
+.glow-accent {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Сетка фона */
+.bg-grid {
+  background-image: 
+    linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Градиент акцента */
+.gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
+}
+
+/* Стилизация сообщений */
+.message-user {
+  @apply bg-terminal-accent/10 border border-terminal-accent/30;
+}
+
+.message-assistant {
+  @apply bg-terminal-surface border border-terminal-border;
+}
+
+/* Карточка погоды */
+.weather-card {
+  @apply bg-gradient-to-br from-terminal-surface to-terminal-bg 
+         border border-terminal-accent/20 rounded-lg p-4
+         shadow-lg shadow-terminal-accent/5;
+}
+
+/* Инпут */
+.chat-input {
+  @apply bg-terminal-surface border border-terminal-border rounded-lg
+         px-4 py-3 text-terminal-text placeholder-terminal-muted
+         focus:outline-none focus:border-terminal-accent focus:ring-1 
+         focus:ring-terminal-accent/50 transition-all duration-200;
+}
+
+/* Кнопка */
+.btn-primary {
+  @apply bg-terminal-accent text-terminal-bg font-medium px-4 py-2 rounded-lg
+         hover:bg-terminal-accent/90 active:scale-95 transition-all duration-200
+         disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+/* Индикатор загрузки */
+.typing-indicator {
+  @apply flex items-center gap-1;
+}
+
+.typing-indicator span {
+  @apply w-2 h-2 bg-terminal-accent rounded-full animate-bounce;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "weather": {
+      "command": "node",
+      "args": ["/полный/путь/к/mcp-server/dist/server.js"],
+      "env": {
+        "YANDEX_WEATHER_API_KEY": "7c0f1d9a-80a7-4671-9fa2-bc8426dc943e",
+        "LOG_LEVEL": "info",
+        "CACHE_TTL": "300"
+      }
+    }
+  }
+}
+

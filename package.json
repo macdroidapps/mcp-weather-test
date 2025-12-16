@@ -1,0 +1,29 @@
+{
+  "name": "mcp-weather-server",
+  "version": "1.0.0",
+  "description": "MCP Server для получения погоды через Яндекс Weather API",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "start:http": "node dist/server-http.js",
+    "dev": "tsx watch src/server.ts",
+    "dev:http": "tsx watch src/server-http.ts",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["mcp", "weather", "yandex", "ai"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "dotenv": "^16.3.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.2"
+  }
+}
