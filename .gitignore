@@ -30,3 +30,6 @@ yarn-error.log*
 # Temporary files
 *.tmp
 .cache/
+
+# Weather monitoring data
+weather-chat/data/

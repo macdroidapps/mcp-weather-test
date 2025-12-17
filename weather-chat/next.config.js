@@ -3,9 +3,9 @@ const nextConfig = {
   // Включаем строгий режим React
   reactStrictMode: true,
   
-  // Экспериментальные функции
+  // Включаем instrumentation для инициализации планировщика
   experimental: {
-    // Server Actions по умолчанию включены в Next.js 14+
+    instrumentationHook: true,
   },
 };
 
