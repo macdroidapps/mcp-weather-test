@@ -158,3 +158,121 @@ export class RateLimitError extends WeatherApiError {
 // Уровни логирования
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
+// =====================================================
+// Типы для MCP Tool: analyze_weather
+// =====================================================
+
+/**
+ * Типы анализа погоды
+ */
+export type AnalysisType = 'clothing' | 'activity' | 'health';
+
+/**
+ * Входные данные для анализа погоды
+ */
+export interface AnalyzeWeatherInput {
+  weather_data: WeatherResponse;
+  analysis_type: AnalysisType;
+}
+
+/**
+ * Рекомендация по одежде
+ */
+export interface ClothingRecommendation {
+  main: string;           // Основная рекомендация
+  items: string[];        // Список предметов одежды
+  extras?: string[];      // Дополнительные аксессуары
+}
+
+/**
+ * Рекомендация по активностям
+ */
+export interface ActivityRecommendation {
+  suitable: string[];     // Подходящие активности
+  avoid: string[];        // Чего избегать
+  tips: string[];         // Советы
+}
+
+/**
+ * Рекомендация по здоровью
+ */
+export interface HealthRecommendation {
+  warnings: string[];     // Предупреждения
+  tips: string[];         // Советы
+  risk_level: 'low' | 'medium' | 'high';  // Уровень риска
+}
+
+/**
+ * Результат анализа погоды
+ */
+export interface WeatherAnalysis {
+  type: AnalysisType;
+  city: string;
+  temperature: number;
+  condition: string;
+  summary: string;        // Краткое резюме
+  clothing?: ClothingRecommendation;
+  activity?: ActivityRecommendation;
+  health?: HealthRecommendation;
+  timestamp: string;
+}
+
+// =====================================================
+// Типы для MCP Tool: save_weather_report
+// =====================================================
+
+/**
+ * Форматы отчётов
+ */
+export type ReportFormat = 'txt' | 'json' | 'md';
+
+/**
+ * Входные данные для сохранения отчёта
+ */
+export interface SaveReportInput {
+  city: string;
+  weather_data: WeatherResponse;
+  analysis: WeatherAnalysis;
+  format: ReportFormat;
+}
+
+/**
+ * Результат сохранения отчёта
+ */
+export interface SaveReportResult {
+  success: boolean;
+  file_path: string;      // Относительный путь к файлу
+  file_url: string;       // Публичный URL для скачивания
+  file_name: string;      // Имя файла
+  file_size: number;      // Размер в байтах
+  format: ReportFormat;
+  timestamp: string;
+}
+
+// =====================================================
+// Типы для агентной цепочки
+// =====================================================
+
+/**
+ * Шаг в цепочке выполнения
+ */
+export interface ToolChainStep {
+  tool: 'get_weather' | 'analyze_weather' | 'save_weather_report';
+  status: 'pending' | 'running' | 'completed' | 'error';
+  input?: unknown;
+  output?: unknown;
+  error?: string;
+  duration_ms?: number;
+}
+
+/**
+ * Результат выполнения цепочки
+ */
+export interface ToolChainResult {
+  steps: ToolChainStep[];
+  weather_data?: WeatherResponse;
+  analysis?: WeatherAnalysis;
+  report?: SaveReportResult;
+  total_duration_ms: number;
+}
+

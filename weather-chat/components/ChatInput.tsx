@@ -62,7 +62,7 @@ export default function ChatInput({
           rows={1}
           className="
             flex-1 bg-transparent resize-none border-none outline-none
-            text-terminal-text placeholder-terminal-muted
+            text-black placeholder-terminal-muted
             px-2 py-2 max-h-36
             disabled:opacity-50 disabled:cursor-not-allowed
           "

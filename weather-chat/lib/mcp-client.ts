@@ -1,11 +1,22 @@
 /**
  * MCP Client для подключения к MCP HTTP серверу
+ * 
+ * Поддерживает все три MCP инструмента:
+ * - get_weather: получение погоды
+ * - analyze_weather: анализ и рекомендации
+ * - save_weather_report: сохранение отчёта
  */
 
-import type { WeatherData } from '@/types/weather';
+import type { WeatherData, WeatherAnalysis, SaveReportResult, ToolChainResult } from '@/types/weather';
 
 // URL MCP сервера
 const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://127.0.0.1:3001';
+
+// Типы анализа
+export type AnalysisType = 'clothing' | 'activity' | 'health';
+
+// Форматы отчётов
+export type ReportFormat = 'txt' | 'json' | 'md';
 
 /**
  * Получить погоду через MCP сервер
@@ -47,6 +58,104 @@ export async function checkMcpHealth(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/**
+ * Анализ погоды через MCP сервер
+ */
+export async function analyzeWeatherViaMcp(
+  weatherData: WeatherData,
+  analysisType: AnalysisType
+): Promise<WeatherAnalysis> {
+  const response = await fetch(`${MCP_SERVER_URL}/api/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      weather_data: weatherData,
+      analysis_type: analysisType,
+    }),
+    cache: 'no-store',
+  });
+  
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || `MCP server error: ${response.status}`);
+  }
+  
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to analyze weather');
+  }
+  
+  return result.data as WeatherAnalysis;
+}
+
+/**
+ * Сохранить отчёт через MCP сервер
+ */
+export async function saveReportViaMcp(
+  city: string,
+  weatherData: WeatherData,
+  analysis: WeatherAnalysis,
+  format: ReportFormat
+): Promise<SaveReportResult> {
+  const response = await fetch(`${MCP_SERVER_URL}/api/save-report`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      city,
+      weather_data: weatherData,
+      analysis,
+      format,
+    }),
+    cache: 'no-store',
+  });
+  
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    throw new Error(error.error || `MCP server error: ${response.status}`);
+  }
+  
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to save report');
+  }
+  
+  return result.data as SaveReportResult;
+}
+
+/**
+ * Выполнить полную цепочку инструментов:
+ * get_weather → analyze_weather → save_weather_report
+ */
+export async function executeToolChain(
+  city: string,
+  analysisType: AnalysisType = 'clothing',
+  format: ReportFormat = 'md'
+): Promise<ToolChainResult> {
+  const response = await fetch(`${MCP_SERVER_URL}/api/tool-chain`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      city,
+      analysis_type: analysisType,
+      format,
+    }),
+    cache: 'no-store',
+  });
+  
+  const result = await response.json();
+  
+  // Возвращаем результат даже если были частичные ошибки
+  return result as ToolChainResult;
 }
 
 /**
